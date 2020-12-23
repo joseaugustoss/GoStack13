@@ -4,7 +4,17 @@ const { v4: uuid, validate: isValidate } = require("uuid");
 const app = express();
 app.use(express.json());
 
+app.use("/projects/:id", validateProjectID);
+
 const projects = [];
+
+function validateProjectID(request, response, next) {
+    const { id } = request.params;
+    if (!isValidate(id)) {
+        return response.status(400).json({ error: "Invalid project ID" });
+    }
+    return next();
+}
 
 app.get("/projects", (request, response) => {
     return response.json(projects);
@@ -27,7 +37,7 @@ app.put("/projects/:id", (request, response) => {
     const { id } = request.params;
     const { title, owner } = request.body;
 
-    const projectFind = projects.findIndex(project  => project.id === id);
+    const projectFind = projects.findIndex((project) => project.id === id);
 
     if (projectFind < 0) {
         return response.status(400).json({ error: "Project not found." });
@@ -35,24 +45,24 @@ app.put("/projects/:id", (request, response) => {
     const project = {
         id,
         title,
-        owner
+        owner,
     };
-    
+
     projects[projectFind] = project;
-    
+
     return response.status(200).json(project);
 });
 
 app.delete("/projects/:id", (request, response) => {
-  const {id} = request.params;
-  
-  const projectFind = projects.findIndex(project => project.id === id);
+    const { id } = request.params;
 
-  if (projectFind < 0) {
-    return response.status(400).json({ error: "Project not found." });
-  }
-  
-    projects.splice(projectFind, 1)
+    const projectFind = projects.findIndex((project) => project.id === id);
+
+    if (projectFind < 0) {
+        return response.status(400).json({ error: "Project not found." });
+    }
+
+    projects.splice(projectFind, 1);
     return response.send();
 });
 
