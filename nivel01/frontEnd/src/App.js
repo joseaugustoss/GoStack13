@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import Header from "./components/Header";
 
 function App(){
 
-  const projects = ['Desenvolvimento com React JS', 'Desenvolvimento com PHP']
+  const [projects, setProjects] = useState(['Desenvolvimento com React JS', 'Desenvolvimento com PHP'])
 
   function handleAddProject() {
-    projects.push(`Novo projeto ${Date.now()}`)
+    setProjects([...projects, `Novo projeto ${Date.now()}`])
     
   }
   return (
