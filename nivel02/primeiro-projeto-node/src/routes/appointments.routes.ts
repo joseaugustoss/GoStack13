@@ -1,23 +1,30 @@
-import {request, response, Router}  from 'express'
-import {v4 as uuid} from 'uuid'
+import { Router } from "express";
+import { startOfHour, parseISO, isEqual } from "date-fns";
+import Appointment from "../models/Appointment";
 
-const appointmentsRouter = Router()
+const appointmentsRouter = Router();
 
-const appointments = []
+const appointments: Appointment[] = [];
 
-appointmentsRouter.post('/', (request, response) =>{
+appointmentsRouter.post("/", (request, response) => {
+  const { provider, date } = request.body;
+  const parseDate = startOfHour(parseISO(date));
 
-  const {provider, date} = request.body;
+  const findAppointmentInSameDate = appointments.find((appointment) =>
+    isEqual(parseDate, appointment.date)
+  );
 
-  const appointment ={
-    id: uuid(),
-    provider,
-    date
+  if (findAppointmentInSameDate) {
+    return response
+      .status(400)
+      .json({ message: "This appointment is already booked" });
   }
 
-  appointments.push(appointment)
+  const appointment = new Appointment(provider, parseDate);
 
-  return response.json(appointment)
-})
+  appointments.push(appointment);
+
+  return response.json(appointment);
+});
 
 export default appointmentsRouter;
