@@ -9,7 +9,7 @@ sessionsRoutes.post("/", async (request, response) => {
 
     const authenticateUser = new AuthenticateUserService();
 
-    const { user } = await authenticateUser.execute({
+    const { user, token } = await authenticateUser.execute({
       email,
       password,
     });
@@ -21,7 +21,7 @@ sessionsRoutes.post("/", async (request, response) => {
       created_up: user.created_at,
       updated_at: user.updated_at,
     };
-    return response.status(200).json({ user: userWithoutPassword });
+    return response.status(200).json({ user: userWithoutPassword, token });
   } catch (err) {
     return response.status(400).json({ error: err.message });
   }
