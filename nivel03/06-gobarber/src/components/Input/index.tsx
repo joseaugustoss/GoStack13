@@ -38,7 +38,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
         });
     }, [fieldName, registerField]);
     return (
-        <Container isFilled={isFilled} isFocused={isFocused}>
+        <Container isFocused={isFocused} isFilled={isFilled}>
             {Icon && <Icon size={20} />}
             <input
                 onFocus={handleInputFocus}
@@ -46,6 +46,7 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
                 defaultValue={defaultValue}
                 ref={inputRef}
                 {...rest}
+                type="text"
             />
         </Container>
     );
